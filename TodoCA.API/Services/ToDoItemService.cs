@@ -4,26 +4,45 @@ using TodoCA.API.Repoitories;
 
 namespace TodoCA.API.Services
 {
-    public class ToDoItemService
+    public class ToDoItemService : IToDoItemService
     {
-        public async Task AddToDoItem(AddToDoItemDto addToDoItemDto)
-        {
-            var toDoItem = new TodoItem
-            {
-                Id = Guid.NewGuid(),
-                Title = addToDoItemDto.Title
-            };
+        //public async Task AddToDoItem(AddToDoItemDto addToDoItemDto)
+        //{
+        //    var toDoItem = new TodoItem
+        //    {
+        //        Id = Guid.NewGuid(),
+        //        Title = addToDoItemDto.Title
+        //    };
 
-            var toDoItemRepository = new ToDoItemRepository();
-            await toDoItemRepository.ToDoItemAdd(toDoItem);
+        //    var toDoItemRepository = new ToDoItemRepository();
+        //    await toDoItemRepository.ToDoItemAdd(toDoItem);
+        //}
+
+        //public async Task<List<TodoItem>> GetToDoItems()
+        //{
+        //    var toDoItemRepository = new ToDoItemRepository();
+        //    var toDoItemList = await toDoItemRepository.GetToDoItemList();
+
+        //    return toDoItemList;
+        //}
+        public Task AddToDoItem(AddToDoItemDto request)
+        {
+            throw new NotImplementedException();
         }
 
-        public async Task<List<TodoItem>> GetToDoItems()
+        public Task<TodoItem> GetToDoItemById(Guid id)
         {
-            var toDoItemRepository = new ToDoItemRepository();
-            var toDoItemList = await toDoItemRepository.GetToDoItemList();
+            throw new NotImplementedException();
+        }
 
-            return toDoItemList;
+        public Task<List<TodoItem>> GetToDoItemList()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateToDoItem(Guid id, UpdateToDoItemDto request)
+        {
+            
         }
     }
 }

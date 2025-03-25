@@ -6,5 +6,7 @@ namespace TodoCA.API.Repositories
     {
         Task ToDoItemAdd(TodoItem toDoItem);
         Task<List<TodoItem>> GetToDoItemList();
+
+        Task<TodoItem> GetToDoItemById(Guid id);
     }
 }

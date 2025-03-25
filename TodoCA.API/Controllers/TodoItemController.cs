@@ -6,18 +6,27 @@ using TodoCA.API.Services;
 
 namespace TodoCA.API.Controllers
 {
+
+    [ApiController]
+    [Route("api/todoitems")]
     public class TodoItemController : Controller
     {
+        private readonly ToDoItemService _toDoItemService;
+
+        public TodoItemController(ToDoItemService toDoItemService)
+        {
+            _toDoItemService = toDoItemService;
+        }
+
         [HttpPost]
         public async Task<ActionResult> AddToDo(AddTodoItemRequest newTodo)
         {
-            var toDoItemService = new ToDoItemService();
             var addToDoItemDto = new AddToDoItemDto
             {
                 Title = newTodo.Title
             };
 
-            await toDoItemService.AddToDoItem(addToDoItemDto);
+            await _toDoItemService.AddToDoItem(addToDoItemDto);
 
             return Ok();
         }
@@ -25,44 +34,49 @@ namespace TodoCA.API.Controllers
         [HttpGet]
         public async Task<ActionResult<List<ToDoItemListResponse>>> GetAllToDos()
         {
-            var toDoItemService = new ToDoItemService();
-            var toDoItems = await toDoItemService.GetToDoItems();
-
-
+            var toDoItems = await _toDoItemService.GetToDoItemList();
             var toDoItemsListResponse = new List<ToDoItemListResponse>();
-            foreach (var item in toDoItems)
-            {
-                toDoItemsListResponse.Add(new ToDoItemListResponse
-                {
-                    Id = item.Id,
-                    Title = item.Title,
-                    IsComplete = item.IsComplete
-                });
-            }
 
             return Ok(toDoItemsListResponse);
         }
 
         [HttpGet]
         [Route("{Id}")]
-        public async Task<ActionResult> GetSpecificToDo()
+
+        public async Task<ActionResult<GetToDoItemDto>> GetToDoItem(Guid Id)
         {
-            var toDoItemService = new ToDoItemService();
-            var toDoItems = await toDoItemService.GetToDoItems();
-
-
-            var toDoItemsListResponse = new List<ToDoItemListResponse>();
-            foreach (var item in toDoItems)
+            var item = await _toDoItemService.GetToDoItemById(Id);
+            
+            if(item == null)
             {
-                toDoItemsListResponse.Add(new ToDoItemListResponse
-                {
-                    Id = item.Id,
-                    Title = item.Title,
-                    IsComplete = item.IsComplete
-                });
+                return NotFound();
             }
 
-            return Ok(toDoItemsListResponse);
+            var response = new GetToDoItemDto
+            {
+                Id = item.Id,
+                Title = item.Title,
+                IsComplete = item.IsComplete,
+            };
+
+            return Ok(response);
         }
+
+        [HttpPut]
+        [Route("{Id}")]
+
+        public async Task<ActionResult> UpdateToDoItem(Guid Id, UpdateToDoItemRequest updateToDoItemRequest)
+        {
+            var updateToDoItemDto = new UpdateToDoItemDto
+            {
+                Id = Id
+            };
+            await _toDoItemService.UpdateToDoItem(updateToDoItemDto);
+            return Ok();
+        }
+
+
+        [HttpDelete]
+        [Route("{Id}")]
     }
 }

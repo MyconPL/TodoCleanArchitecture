@@ -8,5 +8,6 @@ namespace TodoCA.API.Services
         Task AddToDoItem(AddToDoItemDto request);
         Task<List<TodoItem>> GetToDoItemList();
         Task<TodoItem> GetToDoItemById(Guid id);
+        Task UpdateToDoItem(Guid id, UpdateToDoItemDto request);
     }
 }

@@ -44,6 +44,12 @@ The project is divided into the following layers:
    dotnet run --project API
    ```
 
+   5. **Open Swagger**
+   Or use Postman jak ci szwagier nie pasuje
+   ```sh
+   https://localhost:<port>/swagger
+   ```
+
 ## API Endpoints
 
 ### Todo Items

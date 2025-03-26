@@ -35,7 +35,11 @@ The project is divided into the following layers:
      dotnet ef database update -p Infrastructure -s API
      ```
 
-3. **Run the Application**
+3. **Build the Application to check for errors**
+   ```sh
+   dotnet build
+   ```
+4. **Run the Application**
    ```sh
    dotnet run --project API
    ```

@@ -11,25 +11,31 @@ namespace TodoCA.API.Controllers
     [Route("api/todoitems")]
     public class TodoItemController : Controller
     {
-        private readonly ToDoItemService _toDoItemService;
-
-        public TodoItemController(ToDoItemService toDoItemService)
+        private readonly IToDoItemService _toDoItemService;
+        public TodoItemController(IToDoItemService toDoItemService)
         {
             _toDoItemService = toDoItemService;
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddToDoItem(AddToDoItemDto addToDoItemDto)
+        public async Task<ActionResult> AddToDoItem(AddTodoItemRequest data)
         {
-           await _toDoItemService.AddToDoItem(addToDoItemDto);
+
+           await _toDoItemService.AddToDoItem(new AddToDoItemDto { Title = data.Title});
            return Ok();
         }
 
         [HttpGet]
         public async Task<ActionResult<List<ToDoItemListResponse>>> GetToDoItemList()
         {
+
             var toDoItems = await _toDoItemService.GetToDoItemList();
-            var toDoItemsListResponse = new List<ToDoItemListResponse>();
+            var toDoItemsListResponse = toDoItems.Select(x => new ToDoItemListResponse
+            {
+                Id = x.Id,
+                Title = x.Title,
+                IsComplete = x.IsComplete
+            }).ToList();
 
             return Ok(toDoItemsListResponse);
         }
@@ -37,9 +43,17 @@ namespace TodoCA.API.Controllers
         [HttpGet]
         [Route("{Id}")]
 
-        public async Task<ActionResult<GetToDoItemDto>> GetToDoItemById(Guid Id)
+        public async Task<ActionResult<GetToDoItemByIdResponse>> GetToDoItemById(Guid Id)
         {
-            var request = new Get
+            var result = await _toDoItemService.GetToDoItemById(Id);
+            return Ok(new GetToDoItemByIdResponse
+            {
+                Id = result.Id,
+                Title = result.Title,
+                IsComplete = result.IsComplete,
+                CreatedAt = result.CreatedAt,
+                CompletedAt = result.CompletedAt
+            });
         }
 
         [HttpPut]

@@ -4,6 +4,7 @@ using TodoCA.API.Entities;
 using TodoCA.API.Repositories;
 using TodoCA.API.Persistence;
 using TodoCA.API.DTO;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace TodoCA.API.Repoitories
 {
@@ -11,25 +12,27 @@ namespace TodoCA.API.Repoitories
     {
         private readonly AppDbContext _dbContext;
 
-        //public async Task AddToDoItem(TodoItem toDoItem)
-        //{
-        //    await _dbContext.ToDoItem.AddAsync(toDoItem);
-        //    await _dbContext.SaveChangesAsync();
-        //}
+        public ToDoItemRepository(AppDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
 
         public async Task<List<TodoItem>> GetToDoItemList()
         {
             return await _dbContext.ToDoItem.ToListAsync();
         }
 
-        public async Task ToDoItemAdd(TodoItem toDoItem)
-        {
-            await _dbContext.ToDoItem.AddAsync(toDoItem);
-        }
 
-        public Task DeleteToDoItem(Guid id)
+        public async Task DeleteToDoItem(Guid id)
         {
-            throw new NotImplementedException();
+            var deleteToDoItem = await _dbContext.ToDoItem.FindAsync(id);
+
+            if (deleteToDoItem == null)
+            {
+                throw new Exception("Item not found");
+            }
+            _dbContext.Remove(deleteToDoItem);
+            await _dbContext.SaveChangesAsync();
         }
 
         public async Task ToggleCompletionToDoItem(Guid id)
@@ -45,7 +48,11 @@ namespace TodoCA.API.Repoitories
 
         public async Task AddToDoItem(AddToDoItemDto addToDoItemDto)
         {
-            await _dbContext.ToDoItem.AddAsync(addToDoItemDto);
+            await _dbContext.ToDoItem.AddAsync(new TodoItem
+            {
+                Id = Guid.NewGuid(),
+                Title = addToDoItemDto.Title
+            });
             await _dbContext.SaveChangesAsync();
         }
 
@@ -59,23 +66,5 @@ namespace TodoCA.API.Repoitories
 
             } else throw new Exception("Item not found");
         }
-
-
-        //public async Task ToDoItemAdd(TodoItem toDoItem)
-        //{   
-        //    using (var db = new AppDbContext())
-        //    {
-        //        db.Add(toDoItem);
-        //        await db.SaveChangesAsync();
-        //    }
-        //}
-
-        //public async Task<List<TodoItem>> GetToDoItemList()
-        //{
-        //    using (var db = new AppDbContext())
-        //    {
-        //        return await db.ToDoItem.ToListAsync();
-        //    }
-        //}
     }
 }

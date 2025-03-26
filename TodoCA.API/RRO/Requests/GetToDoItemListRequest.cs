@@ -1,6 +1,6 @@
 ﻿namespace TodoCA.API.RRO.Requests
 {
-    public class UpdateToDoItemRequest
+    public class GetToDoItemListRequest
     {
     }
 }

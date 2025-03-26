@@ -1,29 +1,48 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+using Serilog;
+using TodoCA.API.Persistence;
 using TodoCA.API.Repoitories;
 using TodoCA.API.Repositories;
 using TodoCA.API.Services;
-using TodoCA.API.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// 🔹 Rejestracja Seriloga
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.File("logs/log.txt")
+    .CreateLogger();
+builder.Host.UseSerilog();
+
+// 🔹 Rejestracja usług DI
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-builder.Services.AddDbContext<DbContext>(options =>
+builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-// Dodanie serwisów do Dependency Injection (DI)
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-// Rejestracja własnych serwisów (DI)
 builder.Services.AddScoped<IToDoItemService, ToDoItemService>();
 builder.Services.AddScoped<IToDoItemRepository, ToDoItemRepository>();
 
+// 🔹 Dodanie kontrolerów, CORS i Swaggera
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
+
+// ⬇️ Dopiero teraz budujemy aplikację
 var app = builder.Build();
 
-// Konfiguracja HTTP Pipeline
+// 🔹 Middleware i konfiguracja HTTP Pipeline
+app.UseCors("AllowSpecificOrigin");
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -33,4 +52,11 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+
+// 🔹 Zamknięcie logowania przy zamknięciu aplikacji
+app.Lifetime.ApplicationStopped.Register(() =>
+{
+    Log.CloseAndFlush();
+});
+
 app.Run();

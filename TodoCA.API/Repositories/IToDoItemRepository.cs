@@ -10,7 +10,7 @@ namespace TodoCA.API.Repositories
         Task AddToDoItem(AddToDoItemDto toDoItem);
         Task<List<TodoItem>> GetToDoItemList();
 
-        Task GetToDoItemById(Guid id);
+        Task<TodoItem> GetToDoItemById(Guid id);
 
         Task DeleteToDoItem(Guid id);
 

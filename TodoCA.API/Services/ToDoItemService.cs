@@ -1,10 +1,9 @@
 ﻿using TodoCA.API.DTO;
 using TodoCA.API.Entities;
+using TodoCA.API.Persistence;
 using TodoCA.API.Repoitories;
 using TodoCA.API.Repositories;
-using TodoCA.API.Persistence;
 using TodoCA.API.RRO.Responses;
-using TodoCA.API.RRO.Requests;
 
 namespace TodoCA.API.Services
 {
@@ -13,10 +12,10 @@ namespace TodoCA.API.Services
         private readonly IToDoItemRepository _repository;
         private readonly AppDbContext _dbContext;
 
-
-        public ToDoItemService(IToDoItemRepository toDoItemRepository)
+        public ToDoItemService(IToDoItemRepository toDoItemRepository, AppDbContext dbContext)
         {
             _repository = toDoItemRepository;
+            _dbContext = dbContext;
         }
 
         public async Task AddToDoItem(AddToDoItemDto addToDoItemDto)
@@ -27,8 +26,7 @@ namespace TodoCA.API.Services
                 Title = addToDoItemDto.Title
             };
 
-            var toDoItemRepository = new ToDoItemRepository();
-            await toDoItemRepository.ToDoItemAdd(toDoItem);
+            await _repository.AddToDoItem(addToDoItemDto);
         }
 
         public async Task DeleteToDoItem(Guid id)
@@ -36,9 +34,9 @@ namespace TodoCA.API.Services
             await _repository.DeleteToDoItem(id);
         }
 
-        public async Task GetToDoItemById(Guid id)
+        public async Task<TodoItem> GetToDoItemById(Guid id)
         {
-            await _repository.GetToDoItemById(id);
+            return await _repository.GetToDoItemById(id);
         }
 
         public async Task<List<TodoItem>> GetToDoItemList()
@@ -46,18 +44,19 @@ namespace TodoCA.API.Services
             return await _repository.GetToDoItemList();
         }
 
-        public Task<ToggleCompletionToDoItemResponse> ToggleCompletionToDoItem(ToggleCompletionToDoItemRequest request)
+        public async Task<ToggleCompletionToDoItemResponse> ToggleCompletionToDoItem(Guid id)
         {
-            var toggleCompletionToDoItem = _repository.GetToDoItemById(request.Id);
+            var toggleCompletionToDoItem = await _repository.GetToDoItemById(id);
             if (toggleCompletionToDoItem == null)
             {
-                throw new System.Exception("Item not found");
+                return null;
             }
-        }
-
-        Task<TodoItem> IToDoItemService.GetToDoItemById(Guid id)
-        {
-            throw new NotImplementedException();
+            return new ToggleCompletionToDoItemResponse
+            {
+                Id = toggleCompletionToDoItem.Id,
+                Title = toggleCompletionToDoItem.Title,
+                IsComplete = toggleCompletionToDoItem.IsComplete
+            };
         }
     }
 }

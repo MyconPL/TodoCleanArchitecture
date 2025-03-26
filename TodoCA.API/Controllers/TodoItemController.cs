@@ -59,14 +59,15 @@ namespace TodoCA.API.Controllers
         [HttpPut]
         [Route("{Id}")]
 
-        public async Task<ActionResult> ToggleCompletionToDoItem(Guid Id)
+        public async Task<ActionResult<ToggleCompletionToDoItemResponse>> ToggleCompletionToDoItem(Guid Id)
         {
             var toggleCompletionToDoItemDto = new ToggleCompletionToDoItemDto
             {
                 Id = Id
             };
-            await _toDoItemService.ToggleCompletionToDoItem(Id);
-            return Ok();
+
+            var response = await _toDoItemService.ToggleCompletionToDoItem(toggleCompletionToDoItemDto);
+            return Ok(response);
         }
 
 

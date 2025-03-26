@@ -35,15 +35,28 @@ namespace TodoCA.API.Repoitories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task ToggleCompletionToDoItem(Guid id)
+        public async Task<TodoItem> ToggleCompletionToDoItem(Guid id)
         {
             var toggleCompletionToDoItem = await _dbContext.ToDoItem.FindAsync(id);
 
-            if (toggleCompletionToDoItem != null)
-            { 
-                toggleCompletionToDoItem.IsComplete = !toggleCompletionToDoItem.IsComplete;
-                await _dbContext.SaveChangesAsync();
-            } else throw new Exception("Item not found");
+            if (toggleCompletionToDoItem == null)
+            {
+                throw new Exception("Item not found");
+            }
+
+            toggleCompletionToDoItem.IsComplete = !toggleCompletionToDoItem.IsComplete;
+            if (toggleCompletionToDoItem.IsComplete)
+            {
+                toggleCompletionToDoItem.CompletedAt = DateTime.Now;
+            }
+            else
+            {
+                toggleCompletionToDoItem.CompletedAt = null;
+            }
+
+            await _dbContext.SaveChangesAsync();
+
+            return toggleCompletionToDoItem;
         }
 
         public async Task AddToDoItem(AddToDoItemDto addToDoItemDto)

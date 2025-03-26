@@ -9,10 +9,7 @@ namespace TodoCA.API.Services
         Task AddToDoItem(AddToDoItemDto request);
         Task<List<TodoItem>> GetToDoItemList();
         Task<TodoItem> GetToDoItemById(Guid id);
-        Task<ToggleCompletionToDoItemResponse> ToggleCompletionToDoItem(Guid id);
-
-
-
         Task DeleteToDoItem(Guid id);
+        Task<ToggleCompletionToDoItemResponse> ToggleCompletionToDoItem(ToggleCompletionToDoItemDto request);
     }
 }

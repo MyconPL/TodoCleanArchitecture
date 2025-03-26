@@ -14,6 +14,6 @@ namespace TodoCA.API.Repositories
 
         Task DeleteToDoItem(Guid id);
 
-        Task ToggleCompletionToDoItem(Guid id);
+        Task<TodoItem> ToggleCompletionToDoItem(Guid id);
     }
 }

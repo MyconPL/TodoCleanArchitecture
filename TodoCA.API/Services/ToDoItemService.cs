@@ -1,4 +1,5 @@
-﻿using TodoCA.API.DTO;
+﻿using Serilog;
+using TodoCA.API.DTO;
 using TodoCA.API.Entities;
 using TodoCA.API.Persistence;
 using TodoCA.API.Repoitories;
@@ -25,7 +26,7 @@ namespace TodoCA.API.Services
                 Id = Guid.NewGuid(),
                 Title = addToDoItemDto.Title
             };
-
+            Log.Information("Item added with title {Title}", toDoItem.Title);
             await _repository.AddToDoItem(addToDoItemDto);
         }
 
@@ -44,18 +45,49 @@ namespace TodoCA.API.Services
             return await _repository.GetToDoItemList();
         }
 
-        public async Task<ToggleCompletionToDoItemResponse> ToggleCompletionToDoItem(Guid id)
+        //public async Task<ToggleCompletionToDoItemResponse> ToggleCompletionToDoItem(Guid id)
+        //{
+        //    var toggleCompletionToDoItem = await _repository.GetToDoItemById(id);
+
+        //    return new ToggleCompletionToDoItemResponse
+        //    {
+        //        Id = toggleCompletionToDoItem.Id,
+        //        Title = toggleCompletionToDoItem.Title,
+        //        IsComplete = toggleCompletionToDoItem.IsComplete,
+        //        CompletedAt = toggleCompletionToDoItem.CompletedAt
+        //    };
+        //}
+
+        public async Task<ToggleCompletionToDoItemResponse> ToggleCompletionToDoItem(ToggleCompletionToDoItemDto request)
         {
-            var toggleCompletionToDoItem = await _repository.GetToDoItemById(id);
+            var toggleCompletionToDoItem = await _repository.GetToDoItemById(request.Id);
+
             if (toggleCompletionToDoItem == null)
             {
-                return null;
+                Log.Error("Item not found");
+                throw new Exception("Item not found");
             }
+            
+            toggleCompletionToDoItem.IsComplete = !toggleCompletionToDoItem.IsComplete;
+            if (toggleCompletionToDoItem.IsComplete)
+            {
+                toggleCompletionToDoItem.CompletedAt = DateTime.Now;
+                Log.Information("Item completed at {CompletedAt}", toggleCompletionToDoItem.CompletedAt);
+            }
+            else
+            {
+                toggleCompletionToDoItem.CompletedAt = null;
+                Log.Information("Item {Title} uncompleted");
+            }
+
+            await _dbContext.SaveChangesAsync();
+
             return new ToggleCompletionToDoItemResponse
             {
                 Id = toggleCompletionToDoItem.Id,
                 Title = toggleCompletionToDoItem.Title,
-                IsComplete = toggleCompletionToDoItem.IsComplete
+                IsComplete = toggleCompletionToDoItem.IsComplete,
+                CompletedAt = toggleCompletionToDoItem.CompletedAt
             };
         }
     }

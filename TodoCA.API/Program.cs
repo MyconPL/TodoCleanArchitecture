@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // 🔹 Rejestracja Seriloga
 Log.Logger = new LoggerConfiguration()
-    .WriteTo.File("logs/log.txt")
+    .WriteTo.File("logs/api_logs.txt")
     .CreateLogger();
 builder.Host.UseSerilog();
 

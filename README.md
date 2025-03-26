@@ -23,7 +23,7 @@ The project is divided into the following layers:
 
 1. **Clone the Repository**
    ```sh
-   git clone https://github.com/yourusername/TodoCA.git
+   [git clone https://github.com/yourusername/TodoCA.git](https://github.com/MyconPL/TodoCleanArchitecture.git)
    cd TodoCA
    ```
 

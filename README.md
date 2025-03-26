@@ -36,13 +36,13 @@ The project is divided into the following layers:
      ```
 
 3. **Build the Application to check for errors**
-   ```sh
+      ```sh
    dotnet build
-   ```
+      ```
 4. **Run the Application**
-```sh
+      ```sh
    dotnet run --project API
-   ```
+      ```
 
 5. **Open Swagger**
    Or use Postman jak ci szwagier nie pasuje

@@ -1,4 +1,4 @@
-﻿namespace TodoCA.API.DTO
+﻿namespace TodoCA.Application.DTO
 {
     public class ToggleCompletionToDoItemDto
     {

@@ -27,7 +27,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Application\TodoCA.Application.csproj" />
-    <ProjectReference Include="..\Domain\TodoCA.Domain.csproj" />
   </ItemGroup>
 
 </Project>

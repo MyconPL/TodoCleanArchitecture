@@ -1,4 +1,4 @@
-﻿namespace TodoCA.API.RRO.Responses
+﻿namespace TodoCA.Application.RRO.Responses
 {
     public class GetToDoItemByIdResponse
     {

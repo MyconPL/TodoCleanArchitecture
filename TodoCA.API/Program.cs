@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Serilog;
-using TodoCA.API.Persistence;
-using TodoCA.API.Repoitories;
-using TodoCA.API.Repositories;
-using TodoCA.API.Services;
+using TodoCA.Application.Interfaces;
+using TodoCA.Application.Services;
+using TodoCA.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 

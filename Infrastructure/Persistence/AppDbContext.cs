@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TodoCA.API.Entities;
+using TodoCA.Domain.Entities;
 
-namespace TodoCA.API.Persistence
+namespace TodoCA.Infrastructure.Persistence
 {
     public class AppDbContext : DbContext
     {

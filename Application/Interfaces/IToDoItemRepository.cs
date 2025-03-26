@@ -1,9 +1,7 @@
-﻿using TodoCA.API.DTO;
-using TodoCA.API.Entities;
-using TodoCA.API.Repoitories;
-using TodoCA.API.Persistence;
+﻿using TodoCA.Application.DTO;
+using TodoCA.Domain.Entities;
 
-namespace TodoCA.API.Repositories
+namespace TodoCA.Application.Interfaces
 {
     public interface IToDoItemRepository
     {

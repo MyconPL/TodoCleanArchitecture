@@ -1,8 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TodoCA.API.DTO;
-using TodoCA.API.RRO.Requests;
-using TodoCA.API.RRO.Responses;
-using TodoCA.API.Services;
 
 namespace TodoCA.API.Controllers
 {

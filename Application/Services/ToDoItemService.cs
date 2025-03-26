@@ -1,22 +1,18 @@
 ﻿using Serilog;
-using TodoCA.API.DTO;
-using TodoCA.API.Entities;
-using TodoCA.API.Persistence;
-using TodoCA.API.Repoitories;
-using TodoCA.API.Repositories;
-using TodoCA.API.RRO.Responses;
+using TodoCA.Application.DTO;
+using TodoCA.Application.Interfaces;
+using TodoCA.Application.RRO.Responses;
+using TodoCA.Domain.Entities;
 
-namespace TodoCA.API.Services
+namespace TodoCA.Application.Services
 {
     public class ToDoItemService : IToDoItemService
     {
         private readonly IToDoItemRepository _repository;
-        private readonly AppDbContext _dbContext;
 
-        public ToDoItemService(IToDoItemRepository toDoItemRepository, AppDbContext dbContext)
+        public ToDoItemService(IToDoItemRepository toDoItemRepository)
         {
             _repository = toDoItemRepository;
-            _dbContext = dbContext;
         }
 
         public async Task AddToDoItem(AddToDoItemDto addToDoItemDto)

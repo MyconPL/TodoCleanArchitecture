@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TodoCA.API.RRO.Requests
+namespace TodoCA.Application.RRO.Requests
 {
     public class AddTodoItemRequest
     {

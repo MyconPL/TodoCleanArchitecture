@@ -1,8 +1,8 @@
-﻿using TodoCA.API.DTO;
-using TodoCA.API.Entities;
-using TodoCA.API.RRO.Responses;
+﻿using TodoCA.Application.DTO;
+using TodoCA.Domain.Entities;
+using TodoCA.Application.RRO.Responses;
 
-namespace TodoCA.API.Services
+namespace TodoCA.Application.Interfaces
 {
     public interface IToDoItemService
     {

@@ -1,12 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Runtime.CompilerServices;
-using TodoCA.API.Entities;
-using TodoCA.API.Repositories;
-using TodoCA.API.Persistence;
-using TodoCA.API.DTO;
-using Microsoft.AspNetCore.Http.HttpResults;
+using TodoCA.Application.DTO;
+using TodoCA.Application.Interfaces;
+using TodoCA.Domain.Entities;
+using TodoCA.Infrastructure.Persistence;
 
-namespace TodoCA.API.Repoitories
+namespace TodoCA.Infrastructure.Repositories
 {
     public class ToDoItemRepository : IToDoItemRepository
     {

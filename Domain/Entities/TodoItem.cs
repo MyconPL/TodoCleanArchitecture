@@ -1,4 +1,4 @@
-﻿namespace TodoCA.API.Entities
+﻿namespace TodoCA.Domain.Entities
 {
     public class TodoItem
     {

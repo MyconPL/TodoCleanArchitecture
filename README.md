@@ -52,11 +52,7 @@ The project is divided into the following layers:
 | `DELETE` | `/api/todoitems/{id}` | Delete a todo item |
 
 ## Logging
-The project uses **Serilog** to log application events. Logs are stored in a file specified in the `appsettings.json` file.
+The project uses **Serilog** to log application events. Logs are stored in a file specified in the `TodoCA.API/Program.cs` file.
 
 ## Contributing
 Feel free to submit issues and pull requests. Follow the Clean Architecture principles and coding standards when contributing.
-
-## License
-This project is licensed under the MIT License.
-

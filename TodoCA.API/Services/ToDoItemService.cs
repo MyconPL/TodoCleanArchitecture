@@ -1,48 +1,63 @@
 ﻿using TodoCA.API.DTO;
 using TodoCA.API.Entities;
 using TodoCA.API.Repoitories;
+using TodoCA.API.Repositories;
+using TodoCA.API.Persistence;
+using TodoCA.API.RRO.Responses;
+using TodoCA.API.RRO.Requests;
 
 namespace TodoCA.API.Services
 {
     public class ToDoItemService : IToDoItemService
     {
-        //public async Task AddToDoItem(AddToDoItemDto addToDoItemDto)
-        //{
-        //    var toDoItem = new TodoItem
-        //    {
-        //        Id = Guid.NewGuid(),
-        //        Title = addToDoItemDto.Title
-        //    };
+        private readonly IToDoItemRepository _repository;
+        private readonly AppDbContext _dbContext;
 
-        //    var toDoItemRepository = new ToDoItemRepository();
-        //    await toDoItemRepository.ToDoItemAdd(toDoItem);
-        //}
 
-        //public async Task<List<TodoItem>> GetToDoItems()
-        //{
-        //    var toDoItemRepository = new ToDoItemRepository();
-        //    var toDoItemList = await toDoItemRepository.GetToDoItemList();
-
-        //    return toDoItemList;
-        //}
-        public Task AddToDoItem(AddToDoItemDto request)
+        public ToDoItemService(IToDoItemRepository toDoItemRepository)
         {
-            throw new NotImplementedException();
+            _repository = toDoItemRepository;
         }
 
-        public Task<TodoItem> GetToDoItemById(Guid id)
+        public async Task AddToDoItem(AddToDoItemDto addToDoItemDto)
         {
-            throw new NotImplementedException();
+            var toDoItem = new TodoItem
+            {
+                Id = Guid.NewGuid(),
+                Title = addToDoItemDto.Title
+            };
+
+            var toDoItemRepository = new ToDoItemRepository();
+            await toDoItemRepository.ToDoItemAdd(toDoItem);
         }
 
-        public Task<List<TodoItem>> GetToDoItemList()
+        public async Task DeleteToDoItem(Guid id)
         {
-            throw new NotImplementedException();
+            await _repository.DeleteToDoItem(id);
         }
 
-        public Task UpdateToDoItem(Guid id, UpdateToDoItemDto request)
+        public async Task GetToDoItemById(Guid id)
         {
-            
+            await _repository.GetToDoItemById(id);
+        }
+
+        public async Task<List<TodoItem>> GetToDoItemList()
+        {
+            return await _repository.GetToDoItemList();
+        }
+
+        public Task<ToggleCompletionToDoItemResponse> ToggleCompletionToDoItem(ToggleCompletionToDoItemRequest request)
+        {
+            var toggleCompletionToDoItem = _repository.GetToDoItemById(request.Id);
+            if (toggleCompletionToDoItem == null)
+            {
+                throw new System.Exception("Item not found");
+            }
+        }
+
+        Task<TodoItem> IToDoItemService.GetToDoItemById(Guid id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

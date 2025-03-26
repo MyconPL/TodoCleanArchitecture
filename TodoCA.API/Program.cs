@@ -1,8 +1,16 @@
-﻿using TodoCA.API.Repoitories;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using TodoCA.API.Repoitories;
 using TodoCA.API.Repositories;
 using TodoCA.API.Services;
+using TodoCA.API.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddDbContext<DbContext>(options =>
+    options.UseSqlServer(connectionString));
 
 // Dodanie serwisów do Dependency Injection (DI)
 builder.Services.AddControllers();

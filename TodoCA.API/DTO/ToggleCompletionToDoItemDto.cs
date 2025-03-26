@@ -1,6 +1,6 @@
 ﻿namespace TodoCA.API.DTO
 {
-    public class UpdateToDoItemDto
+    public class ToggleCompletionToDoItemDto
     {
         public Guid Id { get; set; }
     }

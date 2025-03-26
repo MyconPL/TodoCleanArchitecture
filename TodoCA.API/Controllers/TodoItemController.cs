@@ -19,20 +19,14 @@ namespace TodoCA.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddToDo(AddTodoItemRequest newTodo)
+        public async Task<ActionResult> AddToDoItem(AddToDoItemDto addToDoItemDto)
         {
-            var addToDoItemDto = new AddToDoItemDto
-            {
-                Title = newTodo.Title
-            };
-
-            await _toDoItemService.AddToDoItem(addToDoItemDto);
-
-            return Ok();
+           await _toDoItemService.AddToDoItem(addToDoItemDto);
+           return Ok();
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<ToDoItemListResponse>>> GetAllToDos()
+        public async Task<ActionResult<List<ToDoItemListResponse>>> GetToDoItemList()
         {
             var toDoItems = await _toDoItemService.GetToDoItemList();
             var toDoItemsListResponse = new List<ToDoItemListResponse>();
@@ -43,40 +37,32 @@ namespace TodoCA.API.Controllers
         [HttpGet]
         [Route("{Id}")]
 
-        public async Task<ActionResult<GetToDoItemDto>> GetToDoItem(Guid Id)
+        public async Task<ActionResult<GetToDoItemDto>> GetToDoItemById(Guid Id)
         {
-            var item = await _toDoItemService.GetToDoItemById(Id);
-            
-            if(item == null)
-            {
-                return NotFound();
-            }
-
-            var response = new GetToDoItemDto
-            {
-                Id = item.Id,
-                Title = item.Title,
-                IsComplete = item.IsComplete,
-            };
-
-            return Ok(response);
+            var request = new Get
         }
 
         [HttpPut]
         [Route("{Id}")]
 
-        public async Task<ActionResult> UpdateToDoItem(Guid Id, UpdateToDoItemRequest updateToDoItemRequest)
+        public async Task<ActionResult> ToggleCompletionToDoItem(Guid Id)
         {
-            var updateToDoItemDto = new UpdateToDoItemDto
+            var toggleCompletionToDoItemDto = new ToggleCompletionToDoItemDto
             {
                 Id = Id
             };
-            await _toDoItemService.UpdateToDoItem(updateToDoItemDto);
+            await _toDoItemService.ToggleCompletionToDoItem(Id);
             return Ok();
         }
 
 
         [HttpDelete]
         [Route("{Id}")]
+
+        public async Task<ActionResult> DeleteToDoItem(Guid Id)
+        {
+            await _toDoItemService.DeleteToDoItem(Id);
+            return Ok();
+        }
     }
 }

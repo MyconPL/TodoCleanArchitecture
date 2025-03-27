@@ -9,6 +9,7 @@ namespace TodoCA.Application.Services
     public class ToDoItemService : IToDoItemService
     {
         private readonly IToDoItemRepository _repository;
+        private readonly ILogger _logger;
 
         public ToDoItemService(IToDoItemRepository toDoItemRepository)
         {
@@ -56,35 +57,26 @@ namespace TodoCA.Application.Services
 
         public async Task<ToggleCompletionToDoItemResponse> ToggleCompletionToDoItem(ToggleCompletionToDoItemDto request)
         {
-            var toggleCompletionToDoItem = await _repository.GetToDoItemById(request.Id);
+
+            var toggleCompletionToDoItem = new { TodoItem = await _repository.GetToDoItemById(request.Id) };
 
             if (toggleCompletionToDoItem == null)
             {
-                Log.Error("Item not found");
-                throw new Exception("Item not found");
-            }
-            
-            toggleCompletionToDoItem.IsComplete = !toggleCompletionToDoItem.IsComplete;
-            if (toggleCompletionToDoItem.IsComplete)
-            {
-                toggleCompletionToDoItem.CompletedAt = DateTime.Now;
-                Log.Information("Item completed at {CompletedAt}", toggleCompletionToDoItem.CompletedAt);
+                _logger.Information("Cannot toggle completion. Item not found");
+                return null;
             }
             else
             {
-                toggleCompletionToDoItem.CompletedAt = null;
-                Log.Information("Item {Title} uncompleted");
+                var toggloCompletionToDoItemResponse = await _repository.ToggleCompletionToDoItem(request.Id);
+                return new ToggleCompletionToDoItemResponse
+                {
+                    Id = toggloCompletionToDoItemResponse.Id,
+                    Title = toggloCompletionToDoItemResponse.Title,
+                    IsComplete = toggloCompletionToDoItemResponse.IsComplete,
+                    CompletedAt = toggloCompletionToDoItemResponse.CompletedAt
+                };
             }
 
-            await _dbContext.SaveChangesAsync();
-
-            return new ToggleCompletionToDoItemResponse
-            {
-                Id = toggleCompletionToDoItem.Id,
-                Title = toggleCompletionToDoItem.Title,
-                IsComplete = toggleCompletionToDoItem.IsComplete,
-                CompletedAt = toggleCompletionToDoItem.CompletedAt
-            };
         }
     }
 }

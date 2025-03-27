@@ -3,6 +3,7 @@ using Serilog;
 using TodoCA.Application.Interfaces;
 using TodoCA.Application.Services;
 using TodoCA.Infrastructure.Persistence;
+using TodoCA.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 

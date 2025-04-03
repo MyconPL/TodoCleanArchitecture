@@ -23,13 +23,13 @@ namespace TodoCA.Application.Services
                 Id = Guid.NewGuid(),
                 Title = addToDoItemDto.Title
             };
-            _logger.Information("Item added with title {Title}", toDoItem.Title);
+            //_logger.Information("Item added with title {Title}", toDoItem.Title);
             await _repository.AddToDoItem(addToDoItemDto);
         }
 
         public async Task DeleteToDoItem(Guid id)
         {
-            _logger.Information("Item deleted with id {Id}", id);
+            //_logger.Information("Item deleted with id {Id}", id);
             await _repository.DeleteToDoItem(id);
         }
 
@@ -40,7 +40,7 @@ namespace TodoCA.Application.Services
 
         public async Task<List<TodoItem>> GetToDoItemList()
         {
-            _logger.Information("Get all items");
+            //_logger.Information("Get all items");
             return await _repository.GetToDoItemList();
         }
 
@@ -57,7 +57,7 @@ namespace TodoCA.Application.Services
             else
             {
                 var toggloCompletionToDoItemResponse = await _repository.ToggleCompletionToDoItem(request.Id);
-                _logger.Information("Item toggled with id {Id}", request.Id);
+                //_logger.Information("Item toggled with id {Id}", request.Id);
                 return new ToggleCompletionToDoItemResponse
                 {
                     Id = toggloCompletionToDoItemResponse.Id,

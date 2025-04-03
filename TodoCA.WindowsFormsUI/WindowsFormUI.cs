@@ -4,6 +4,7 @@ using System.Net.Http.Json;
 using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using TodoCA.WindowsFormsUI;
 
 
 namespace TodoCA.WindowsFormsUI
@@ -12,10 +13,10 @@ namespace TodoCA.WindowsFormsUI
     {
         private readonly HttpClient _httpClient;
 
-        public WinForm()
+        public WinForm(HttpClient httpClient)
         {
             InitializeComponent();
-            _httpClient = new HttpClient { BaseAddress = new Uri("https://localhost:7210/api/") };
+            _httpClient = httpClient;
         }
 
         private async void btnAdd_Click(object sender, EventArgs e)
@@ -35,7 +36,7 @@ namespace TodoCA.WindowsFormsUI
 
         private async void btnDelete_Click(object sender, EventArgs e)
         {
-            if (lstToDoItems.SelectedItem is TodoItem selectedItem)
+            if (listBoxTodos.SelectedItem is TodoItem selectedItem)
             {
                 var response = await _httpClient.DeleteAsync($"ToDoItem/{selectedItem.Id}");
                 if (response.IsSuccessStatusCode)
@@ -52,24 +53,49 @@ namespace TodoCA.WindowsFormsUI
 
         private async void btnToggle_Click(object sender, EventArgs e)
         {
-            if (lstToDoItems.SelectedItem is TodoItem selectedItem)
+            if (listBoxTodos.SelectedItem is ToDoItem selectedTodo)
             {
-                var response = await _httpClient.PutAsJsonAsync($"ToDoItem/{selectedItem.Id}/toggle", new { });
+                selectedTodo.IsComplete = !selectedTodo.IsComplete; // Zmieñ stan
+                var response = await _httpClient.PutAsJsonAsync($"todoitems/{selectedTodo.Id}", selectedTodo);
+
                 if (response.IsSuccessStatusCode)
                 {
-                    MessageBox.Show("Item toggled successfully!");
-                    await LoadToDoItems();
+                    btnLoad_Click(null, null); // Odœwie¿ listê
                 }
                 else
                 {
-                    MessageBox.Show("Error toggling item.");
+                    MessageBox.Show("Error toggling completion.");
                 }
+            }
+            else
+            {
+                MessageBox.Show("Select a task to toggle.");
             }
         }
 
-        private async void Form1_Load(object sender, EventArgs e)
+
+        private async void WinForm_Load(object sender, EventArgs e)
         {
-            await LoadToDoItems();
+            await LoadTodos();
+        }
+
+        private async Task LoadTodos()
+        {
+            try
+            {
+                var todos = await _httpClient.GetFromJsonAsync<ToDoItem[]>("api/todoitems");
+                listBoxTodos.DataSource = todos;
+                listBoxTodos.DisplayMember = "Title";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading todos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void InitializeComponent()
+        {
+            
         }
     }
 }

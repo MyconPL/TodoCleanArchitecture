@@ -1,62 +1,64 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Serilog;
-using TodoCA.Application.Interfaces;
-using TodoCA.Application.Services;
-using TodoCA.Infrastructure.Persistence;
-using TodoCA.Infrastructure.Repositories;
+﻿    using Microsoft.EntityFrameworkCore;
+    using Serilog;
+    using System;
+    using TodoCA.Application.Interfaces;
+    using TodoCA.Application.Services;
+    using TodoCA.Infrastructure.Persistence;
+    using TodoCA.Infrastructure.Repositories;
 
-var builder = WebApplication.CreateBuilder(args);
 
-// 🔹 Rejestracja Seriloga
-Log.Logger = new LoggerConfiguration()
-    .WriteTo.File("logs/api_logs.txt")
-    .CreateLogger();
-builder.Host.UseSerilog();
+    var builder = WebApplication.CreateBuilder(args);
 
-// 🔹 Rejestracja usług DI
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    // 🔹 Rejestracja Seriloga
+    Log.Logger = new LoggerConfiguration()
+        .WriteTo.File("logs/api_logs.txt")
+        .CreateLogger();
+    builder.Host.UseSerilog();
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(connectionString));
+    // 🔹 Rejestracja usług DI
+    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-builder.Services.AddScoped<IToDoItemService, ToDoItemService>();
-builder.Services.AddScoped<IToDoItemRepository, ToDoItemRepository>();
+    builder.Services.AddDbContext<AppDbContext>(options =>
+        options.UseSqlServer(connectionString));
 
-// 🔹 Dodanie kontrolerów, CORS i Swaggera
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowSpecificOrigin",
-        policy =>
-        {
-            policy.AllowAnyOrigin()
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
-        });
-});
+    builder.Services.AddScoped<IToDoItemService, ToDoItemService>();
+    builder.Services.AddScoped<IToDoItemRepository, ToDoItemRepository>();
 
-// ⬇️ Dopiero teraz budujemy aplikację
-var app = builder.Build();
+    // 🔹 Dodanie kontrolerów, CORS i Swaggera
+    builder.Services.AddControllers();
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen();
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("AllowSpecificOrigin",
+            policy =>
+            {
+                policy.AllowAnyOrigin()
+                      .AllowAnyHeader()
+                      .AllowAnyMethod();
+            });
+    });
 
-// 🔹 Middleware i konfiguracja HTTP Pipeline
-app.UseCors("AllowSpecificOrigin");
+    // ⬇️ Dopiero teraz budujemy aplikację
+    var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    // 🔹 Middleware i konfiguracja HTTP Pipeline
+    app.UseCors("AllowSpecificOrigin");
 
-app.UseHttpsRedirection();
-app.UseAuthorization();
-app.MapControllers();
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
 
-// 🔹 Zamknięcie logowania przy zamknięciu aplikacji
-app.Lifetime.ApplicationStopped.Register(() =>
-{
-    Log.CloseAndFlush();
-});
+    app.UseHttpsRedirection();
+    app.UseAuthorization();
+    app.MapControllers();
 
-app.Run();
+    // 🔹 Zamknięcie logowania przy zamknięciu aplikacji
+    app.Lifetime.ApplicationStopped.Register(() =>
+    {
+        Log.CloseAndFlush();
+    });
+
+    app.Run();

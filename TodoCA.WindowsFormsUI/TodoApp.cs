@@ -40,5 +40,10 @@ namespace TodoCA.WindowsFormsUI
                 LoadTodos();
             }
         }
+
+        private void TodoApp_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

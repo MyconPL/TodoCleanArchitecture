@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace TodoCA.Domain.Entities
 {
-    class User
+    class AppUser
     {
+        Guid Id { get; set; }
+        string UserName { get; set; } = null!;
+        string PasswordHash { get; set; } = null!;
+
+        public ICollection<TodoItem> TodoItems { get; set; } = new List<TodoItem>();
     }
 }

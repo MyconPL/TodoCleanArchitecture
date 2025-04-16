@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TodoCA.Domain.Entities
 {
-    class AppUser
+    public class AppUser
     {
         Guid Id { get; set; }
         string UserName { get; set; } = null!;

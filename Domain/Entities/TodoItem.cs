@@ -7,5 +7,7 @@
         public bool IsComplete { get; set; } = false;
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime? CompletedAt { get; set; }
+        public Guid AppUserID { get; set; }
+        public AppUser AppUser { get; set; } = null!;
     }
 }
